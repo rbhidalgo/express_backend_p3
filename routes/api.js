@@ -21,12 +21,13 @@ const client = yelp.client('5s5Z0u2ukZ6QJ2BuVO2hCyLjbQWJ5MXdkkpGbFgtvmKYVKwT_vVB
 router.get("/", async (req, res) => {
   client
    .search({
-    term: "taco",
+    term: "tacos, taqueria",
     location: "los angeles, ca",
-    limit: 6
+    limit: 50,
+    open_now: true
    })
    .then(response => {
-    const locationsName = response.jsonBody.businesses[0].name;
+    const locationsName = response.jsonBody.businesses;
     res.json({
      status: 200,
      data: locationsName
