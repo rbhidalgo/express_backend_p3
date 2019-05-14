@@ -12,6 +12,7 @@ console.log(process.env.MY_SECRET)
 
 const apiRouter = require('./routes/api');
 const usersRouter = require('./routes/users');
+const User = require('./models/User')
 
 
 const app = express();
@@ -24,7 +25,17 @@ app.use(cookieParser());
 
 app.use('/api/v1', apiRouter);
 app.use('/users', usersRouter);
-
+app.post('/locations', async (req, res) => {
+  const foundUser = await User.findById
+  (req.body.currentUser._id)
+  console.log(foundUser)
+  const location = {
+    id: req.body.id,
+    name: req.body.name
+  }
+  await foundUser.locations.push(location)
+  await foundUser.save()
+})
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
