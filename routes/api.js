@@ -34,7 +34,8 @@ const client = yelp.client(process.env.MY_KEY)
     term: "tacos, taqueria",
     location: `${req.body.location}, ca`,
     limit: 50,
-    open_now: true
+    open_now: true,
+    radius: 8050
    })
    .then(response => {
     const locationsName = response.jsonBody.businesses;
