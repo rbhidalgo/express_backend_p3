@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 require('dotenv').config();
+const session = require('express-session')
 
 
 require('./db/db')
@@ -22,6 +23,13 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(
+  session({
+    secret: "random string",
+    resave: false,
+    saveUninitialized: false
+  })
+);
 
 app.use('/api/v1', apiRouter);
 app.use('/users', usersRouter);
@@ -40,6 +48,25 @@ app.post('/locations', async (req, res) => {
   })
 })
 
+app.post('/locations/crawl', async (req, res) => {
+  const foundUser = await User.findById
+  (req.body.currentUser._id)
+  // console.log(foundUser)
+  const crawlLocations = req.body.randomCrawl
+  for (let i = 0; i < crawlLocations.length; i++) {
+    const location = {
+      id: crawlLocations[i].id,
+      name: crawlLocations[i].name
+    } 
+    foundUser.locations.push(location)
+  }
+  console.log(foundUser.locations);
+  
+  await foundUser.save()
+  res.json({
+  user: foundUser
+  })
+})
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

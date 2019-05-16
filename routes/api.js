@@ -39,6 +39,7 @@ const client = yelp.client(process.env.MY_KEY)
    })
    .then(response => {
     const locationsName = response.jsonBody.businesses;
+    
     res.json({
      status: 200,
      data: locationsName

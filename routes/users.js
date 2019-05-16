@@ -21,9 +21,17 @@ try {
 }
 });
 
-router.put('/', (req, res) => {
-return res.json({data: 'Received a PUT HTTP method user'});
-});
+// router.put('/', (req, res) => {
+// return res.json({data: 'Received a PUT HTTP method user'});
+// });
+
+router.put('/update/:id', async (req, res) => {
+  console.log(req.body)
+  const updateUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+  await updateUser.save();
+  console.log(updateUser)
+  res.json(updateUser)
+})
 
 router.delete('/:id/locations/:restId', async (req, res) => {
   const foundUser = await User.findById(req.params.id);
@@ -45,6 +53,20 @@ try {
 } catch(err) {
   res.json({err})
 }
+})
+
+// This is the Logout route
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if(err){
+      res.json({err});
+    } else {
+      res.json({
+        success: true,
+        message: "logged out!"
+      });
+    }
+  })
 })
 
 module.exports = router;
